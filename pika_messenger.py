@@ -1,7 +1,7 @@
 import pika
-from config import RMQ_ADDR, RMQ_PORT, RMQ_USER, RMQ_PASS, RMQ_SEND
+from config import RMQ_ADDR, RMQ_PORT, RMQ_USER, RMQ_PASS, RMQ_RECEIVER
 
-other_user = RMQ_SEND
+other_user = RMQ_RECEIVER
 
 class PikaMessenger():
     exchange_name = other_user

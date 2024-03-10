@@ -1,7 +1,7 @@
 import pika
 import threading
 from pika_messenger import PikaMessenger
-from config import RMQ_ADDR, RMQ_PORT, RMQ_USER, RMQ_PASS, RMQ_RECV
+from config import RMQ_ADDR, RMQ_PORT, RMQ_USER, RMQ_PASS, RMQ_SENDER
 from asyncio import *
 
 # listener
@@ -12,7 +12,7 @@ def start_rmq_consumer():
         print('got chat: ', m)
         # do something with chat ...
     with PikaMessenger(RMQ_ADDR) as consumer:
-        consumer.consume(keys=[RMQ_RECV], callback=rmq_callback)
+        consumer.consume(keys=[RMQ_SENDER], callback=rmq_callback)
 
 consumer_thread = threading.Thread(target=start_rmq_consumer)
 consumer_thread.start()
@@ -23,12 +23,12 @@ rmq = pika.BlockingConnection(
     pika.ConnectionParameters(RMQ_ADDR, RMQ_PORT, '/', rmq_creds)
 )
 rmq_melba = rmq.channel()
-rmq_melba.queue_declare(queue=RMQ_RECV, exclusive=False, durable=True)
+rmq_melba.queue_declare(queue=RMQ_SENDER, exclusive=False, durable=True)
 
 # send
 rmq_melba.basic_publish(
     exchange='',
-    routing_key=RMQ_RECV,
+    routing_key=RMQ_SENDER,
     body='hello world!'
 )
 print('sent')
