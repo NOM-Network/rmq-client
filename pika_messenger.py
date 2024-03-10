@@ -1,12 +1,12 @@
 import pika
 from config import RMQ_ADDR, RMQ_PORT, RMQ_USER, RMQ_PASS, RMQ_SEND
 
-other_user = 'burnt'
+other_user = RMQ_SEND
 
 class PikaMessenger():
     exchange_name = other_user
     def __init__(self, *args, **kwargs):
-        rmq_creds = pika.credentials.PlainCredentials('melba', 'melba')
+        rmq_creds = pika.credentials.PlainCredentials(RMQ_USER, RMQ_PASS)
         self.conn = pika.BlockingConnection(
             pika.ConnectionParameters(RMQ_ADDR, RMQ_PORT, '/', rmq_creds)
         )
